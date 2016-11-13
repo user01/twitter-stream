@@ -1,0 +1,19 @@
+{
+  "name": "twitter-stream",
+  "version": "0.0.1",
+  "description": "Collect Tweets via Stream API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user01/twitter-stream.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/user01/twitter-stream/issues"
+  },
+  "homepage": "https://github.com/user01/twitter-stream#readme"
+}
