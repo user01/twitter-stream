@@ -2,13 +2,15 @@ const Twitter = require('twitter');
 const chalk = require('chalk');
 const fs = require('fs');
 const Datastore = require('nedb');
+const moment = require('moment');
+
 
 const env = require('dotenv').config();
 const db = new Datastore({ filename: 'tweets.db' });
 
 
 const streamParameters = {
-  locations: '-74,40,-73,41'
+  locations: '-74,40,-73,41' // New York City
 }
 
 const client = new Twitter({
@@ -19,6 +21,23 @@ const client = new Twitter({
 });
 
 
+const userToLocal = (user) => {
+  return {
+    id: user["id_str"],
+    screen_name: user["screen_name"],
+    location: user["location"],
+    name: user["name"]
+  }
+}
+const tweetToLocal = (tweet) => {
+  return {
+    timestamp: moment(+tweet["timestamp_ms"]).toDate(),
+    timestamp_ms: tweet["timestamp_ms"],
+    user: userToLocal(tweet["user"]),
+    text: tweet["text"],
+    coordinates: tweet["coordinates"]
+  }
+}
 
 db.loadDatabase((err) => {
   if (err) {
@@ -30,12 +49,16 @@ db.loadDatabase((err) => {
 
   client.stream('statuses/filter', streamParameters, (stream) => {
     stream.on('data', (event) => {
-      console.log(event && event.text);
       if (!event.coordinates){
         return;
       }
-      db.insert(event, ()=>{
-        console.log(`Tweet has been    [${chalk.green('inserted')}]`);
+      const tweet = tweetToLocal(event);
+      db.insert(tweet, ()=>{
+        // console.log(event && event.text);
+        console.log(chalk.blue('________________________________________________________________________________'));
+        console.log(` ${chalk.cyan('>>')} ${tweet.user.name}`);
+        console.log(`    ${tweet.text}`);
+        // console.log(`Tweet has been    [${chalk.green('inserted')}]`);
       });
     });
 
