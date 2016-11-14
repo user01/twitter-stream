@@ -38,3 +38,6 @@ jspm_packages
 
 # enviromental variables
 .env
+
+# simple local database
+tweets.db
