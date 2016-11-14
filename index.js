@@ -6,7 +6,9 @@ const moment = require('moment');
 
 
 const env = require('dotenv').config();
-const db = new Datastore({ filename: 'tweets.db' });
+const db = new Datastore({
+  filename: 'tweets.db'
+});
 
 
 const streamParameters = {
@@ -49,11 +51,11 @@ db.loadDatabase((err) => {
 
   client.stream('statuses/filter', streamParameters, (stream) => {
     stream.on('data', (event) => {
-      if (!event.coordinates){
+      if (!event.coordinates) {
         return;
       }
       const tweet = tweetToLocal(event);
-      db.insert(tweet, ()=>{
+      db.insert(tweet, () => {
         // console.log(event && event.text);
         console.log(chalk.blue('________________________________________________________________________________'));
         console.log(` ${chalk.cyan('>>')} ${tweet.user.name}`);
