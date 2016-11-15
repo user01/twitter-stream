@@ -41,6 +41,7 @@ const tweetToLocal = (tweet) => {
   }
 }
 
+var lastHeardTweet = moment();
 db.loadDatabase((err) => {
   if (err) {
     console.error("Unable to work with database", e);
@@ -86,6 +87,14 @@ db.loadDatabase((err) => {
   });
 
 });
+
+setInterval(()=>{
+  if (lastHeardTweet.add(20,'seconds').isBefore(moment())){
+    console.log(`Detected Tweet stream has [${chalk.red('ended')}]. Restarting ...`);
+    process.exit();
+  }
+}, 500)
+
 
 
 console.log(chalk.blue('================================================================================'));
