@@ -54,6 +54,8 @@ db.loadDatabase((err) => {
       if (!event.coordinates) {
         return;
       }
+      lastHeardTweet = moment();
+
       const tweet = tweetToLocal(event);
       db.insert(tweet, () => {
         // console.log(event && event.text);
@@ -66,14 +68,24 @@ db.loadDatabase((err) => {
 
     stream.on('error', function(error) {
       console.log(`Twitter stream is [${chalk.red('offline')}]`);
-      throw error;
+      process.exit();
+    });
+
+
+    stream.on('end', function(error) {
+      console.log(`Twitter stream is [${chalk.red('disconnected')}]`);
+      process.exit();
+    });
+
+    stream.on('destory', function(error) {
+      console.log(`Twitter stream is [${chalk.red('destroyed')}]`);
+      process.exit();
     });
 
     console.log(`Twitter stream is [${chalk.green('online')}]`);
   });
 
 });
-
 
 
 console.log(chalk.blue('================================================================================'));
